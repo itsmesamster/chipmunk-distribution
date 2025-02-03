@@ -1,9 +1,10 @@
 name: Distribute deb and RPM package for Chipmunk
 run-name: chipmunk rpm/deb package creation and publish to repository
 on:
-  push:
-    tags:
-      - "*"
+  workflow_dispatch:
+  # push:
+  #   tags:
+  #     - "*"
 
 jobs:
   build_x86_64:
@@ -18,12 +19,12 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential fakeroot devscripts debhelper dh-make git
-          bash common/get_release.sh ${{github.ref_name}}
+          bash common/get_release.sh 3.15.3
 
 # add a step for building the required package for another unsupported linux platform like the step below
-      - name: Build RPM package
-        run: |
-          bash rpm_rhel/scripts/distribute_to_rpm.sh ${{env.VERSION}} ${{ github.ref_name }}
+      # - name: Build RPM package
+      #   run: |
+      #     bash rpm_rhel/scripts/distribute_to_rpm.sh ${{env.VERSION}} ${{ github.ref_name }}
 
       - name: Prepare environment
         id: prepare
@@ -33,32 +34,30 @@ jobs:
           TAR_FILE: ${{ env.TAR_FILE }}
 
 # Commenting out .deb package build until https://github.com/esrlabs/chipmunk/issues/2048 is resolved
-      # - name: Build .deb package
-      #   run: |
-      #     sudo bash apt/scripts/build_deb_package.sh ../ ${{github.ref_name}}
+      - name: Build .deb package
+        run: |
+          sudo bash apt/scripts/build_deb_package.sh ../ 3.15.3
 
 # list the name of the package file that needs to be uploaded to chipmunk(for debugging purposes)
       - name: list RPM package
         working-directory: .
         run: |
           rm -rf /tmp/chipmunk_work_dir
-          echo "RPM_FILE=$(find -type f -name '*-x86_64.rpm' -printf '%f\n')" >> $GITHUB_ENV
           echo "DEB_FILE=$(find -type f -name '*.deb' -printf '%f\n')" >> $GITHUB_ENV
 
-      - name: list tag_name
-        run: |
-          echo ${{ github.ref_name }}
+#       - name: list tag_name
+#         run: |
+#           echo ${{ github.ref_name }}
 
-# upload the package file by adding the file type to the file glob pattern in the below step.
-# kindly ensure the package file is named as "chipmunk@version-platform-arch.extension"
+# # upload the package file by adding the file type to the file glob pattern in the below step.
+# # kindly ensure the package file is named as "chipmunk@version-platform-arch.extension"
       - name: Upload RPM to chipmunk using overwrite functionality
         id: upload_rpm
         uses: svenstaro/upload-release-action@v2
         with:
-          repo_name: esrlabs/chipmunk
-          repo_token: ${{ secrets.CHIPMUNK_TOKEN }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
           file: ./chipmunk*.{rpm,deb}
-          tag: ${{ github.ref_name }}
+          tag: 3.15.3
           overwrite: true
           file_glob: true
 
