@@ -3,6 +3,11 @@
 %:
 	dh $@
 
+
+# Disable dh_dwz to avoid errors with missing debug sections
+override_dh_dwz:
+	# Skip dwz optimization
+
 override_dh_auto_install:
 	dh_auto_install 
 	
