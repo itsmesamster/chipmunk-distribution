@@ -1,3 +1,2 @@
-chipmunk-dbgsym_3.10.3-1_amd64.ddeb debug optional automatic=yes
-chipmunk_3.10.3-1_amd64.buildinfo devel optional
-chipmunk_3.10.3-1_amd64.deb devel optional
+chipmunk_3.19.4_arm64.buildinfo devel optional
+chipmunk_3.19.4_arm64.deb devel optional

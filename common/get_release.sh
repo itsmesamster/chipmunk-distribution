@@ -14,12 +14,12 @@ chipmunk_package_url="https://github.com/esrlabs/chipmunk/releases/download/$ver
 working_dir=/tmp/chipmunk_work_dir
 
 # Create an empty working directory
-sudo rm -rf "$working_dir"
-mkdir -p "$working_dir"
+# sudo rm -rf "$working_dir"
+# mkdir -p "$working_dir"
 
 # Store the release in the working_dir folder
 cd "$working_dir"
-wget $chipmunk_package_url
+# wget $chipmunk_package_url
 
 # Find the file starting with "chipmunk@"
 file=$(find . -type f -name 'chipmunk@*' -print -quit)
@@ -31,11 +31,11 @@ if [ -n "$file" ]; then
   
   # Extract the version from the filename
   version=$(echo "$filename" | awk -F'[@-]' '{print $2}')
-  echo "VERSION=$version" >> $GITHUB_ENV
+  export "VERSION=$version"
 
   # Move the file with the new extension
   mv "$file" "$filename.tar.gz"
-  echo "TAR_FILE=$working_dir/$filename.tar.gz" >> $GITHUB_ENV
+  export "TAR_FILE=$working_dir/$filename.tar.gz"
 else
   echo "File not found."
 fi

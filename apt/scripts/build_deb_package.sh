@@ -1,5 +1,5 @@
 #!/bin/bash
-
+export DH_SHLIBDEPS_SKIP=1
 set -eux
 
 # Check if the script is being run with sudo
@@ -54,10 +54,12 @@ else
 fi
 
 # Rename package to match chipmunk assets naming convention
-for file in ../chipmunk_*_amd64.deb; do
+arch=$(dpkg-architecture -qDEB_BUILD_ARCH)
+for file in ../chipmunk_*_"$arch".deb; do
     if [ -e "$file" ]; then
-        new_name=chipmunk@$version-linux-x86_64.deb
+        new_name=chipmunk@$version-linux-$arch.deb
         mv "$file" "$destination_folder/$new_name"
+        chmod 644 "$destination_folder/$new_name"
     fi
 done
 

@@ -20,7 +20,7 @@ tag="$2"
 fi
 
 echo "Packaging chipmunk version - '$version'"
-chipmunk_package="chipmunk@$version-linux-portable.tar.gz"
+chipmunk_package="chipmunk@$version-linux-arm64-portable.tar.gz"
 
 # Folder structure
 output_dir=$(pwd)
